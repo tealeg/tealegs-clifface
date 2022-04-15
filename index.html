@@ -16,87 +16,170 @@
       var ctx = canvas.getContext("2d");
       var floor = canvas.height;
 
-      let gravity = {
-          strength: 4,
-          moveBall: function(bal) {
-              if (ball.y < floor - ball.radius) {
-                  ball.y += gravity.strength;
-              }
-          }
-      }
-
-      let ball = {
-          x: 0,
-          y: floor - 10,
-          radius: 10,
-      }
+      let gravity = 4;
       
-      let advertising = {
-          x: ball.radius,
-          y: floor,
-          hypefactor: 10 * 30,
-          time: 30,
-          touching: function (ball) {
-              return (ball.x >= (this.x - ball.radius)) && (ball.x <= this.x+this.time+ball.radius) && (ball.y > (floor - (this.hypefactor + ball.radius)));
+      let engineer = {
+          motivation: 0,
+          daysIn: 0,
+          radius: 10,
+          draw: function() {
+              ctx.beginPath();
+              ctx.arc(this.daysIn, floor - (this.motivation + this.radius), this.radius, 0, Math.PI*2);
+              ctx.fillStyle = "#0095DD";
+              ctx.fill();
+              ctx.closePath();
+              if (this.motivation <= 0 || this.daysIn == (canvas.width - this.radius)) {
+                  clearInterval(interval);
+              }
           },
-          moveBall: function (ball) {
-              ball.y = ball.y - (this.hypefactor / this.time);
-          }
+          clear: function() {
+              ctx.clearRect(this.daysIn - (this.radius + 1), (floor - (this.motivation + this.radius)) - this.radius , 2*this.radius, 2*this.radius);
+          },
       };
 
-      function drawAdvertising(ad) {
-          drawTriangle(ad.x, ad.y, ad.time, ad.hypefactor, 1);
-      }
+      let activities = [];
 
-      function navigate(ball, ad) {
-          if (ad.touching(ball)) {
-              ad.moveBall(ball);
-          } else {
-              gravity.moveBall(ball);
-          }
-          if (ball.x < (canvas.width - ball.radius)) {
-              ball.x += 1;
-          } else {
-              clearInterval(interval);
-          }
-      }
+      let advertising = {
+          motivate: 10,
+          startDay: 0,
+          endDay: 10,
+          // draw: function(baseline) {
+          //     ctx.beginPath();
+          //     ctx.moveTo(this.startDay, );
+              
+          // },
+      };
+
+      activities.push(advertising);
       
-      function drawTriangle(x, y, width, height, growth){
-          ctx.beginPath();
-          ctx.moveTo(x, y);
-          if (growth > 0) {
-              ctx.lineTo(x+width, y-height);
-              ctx.lineTo(x+width, y);
-              ctx.lineTo(x, y);
-          } else {
-              ctx.lineTo(x, y-height);
-              ctx.lineTo(x+width, y);
-              ctx.lineTo(x, y);
-          }
-          ctx.fillStyle = "#fedfed";
-          ctx.fill();
-          ctx.closePath();
-      }
+      let landingPage = {
+          motivate: 10,
+          startDay: 11,
+          endDay: 12,
+      };
+      
+      activities.push(landingPage);
 
-     function drawBall(ball) {
-          ctx.beginPath();
-          ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
-          ctx.fillStyle = "#0095DD";
-          ctx.fill();
-          ctx.closePath();
-      }
- 
-      function draw(ball, ad) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          drawAdvertising(ad);
-          console.log(ball.x, ball.y)
-          drawBall(ball);
-      }
+      let signUp = {
+          motivate: -20,
+          startDay: 13,
+          endDay: 14,
+      };
+      
+      activities.push(signUp);
 
+      let productQuality = {
+          motivate: 3,
+          startDay: 15,
+          endDay: canvas.width,
+      };
+      
+      activities.push(productQuality);
+      
+
+      let tutorial = {
+          motivate: 3,
+          startDay: 15,
+          endDay: 100,
+      };
+      
+      activities.push(tutorial);
+      
+      
       function frame() {
-          navigate(ball, advertising);
-          draw(ball, advertising);
+          engineer.clear();
+          activities.forEach(function(item, index, array){
+              if (engineer.daysIn >= item.startDay && engineer.daysIn <= item.endDay) {
+                  engineer.motivation += item.motivate;
+                  // activity.draw();)
+              }
+          });
+          engineer.motivation -= gravity;
+          engineer.draw();
+          engineer.daysIn++;
       }
+
+     //  let gravity = {
+     //      strength: 4,
+     //      moveBall: function(bal) {
+     //          if (ball.y < floor - ball.radius) {
+     //              ball.y += gravity.strength;
+     //          }
+     //      }
+     //  }
+
+     //  let ball = {
+     //      x: 0,
+     //      y: floor - 10,
+     //      radius: 10,
+     //  }
+      
+     //  let advertising = {
+     //      x: ball.radius,
+     //      y: floor,
+     //      hypefactor: 10 * 30,
+     //      time: 30,
+     //      touching: function (ball) {
+     //          return (ball.x >= (this.x - ball.radius)) && (ball.x <= this.x+this.time+ball.radius) && (ball.y > (floor - (this.hypefactor + ball.radius)));
+     //      },
+     //      moveBall: function (ball) {
+     //          ball.y = ball.y - (this.hypefactor / this.time);
+     //      }
+     //  };
+
+     //  function drawAdvertising(ad) {
+     //      drawTriangle(ad.x, ad.y, ad.time, ad.hypefactor, 1);
+     //  }
+
+     //  function navigate(ball, ad) {
+     //      if (ad.touching(ball)) {
+     //          ad.moveBall(ball);
+     //      } else {
+     //          gravity.moveBall(ball);
+     //      }
+     //      if (ball.x < (canvas.width - ball.radius)) {
+     //          ball.x += 1;
+     //      } else {
+     //          clearInterval(interval);
+     //      }
+     //  }
+      
+     //  function drawTriangle(x, y, width, height, growth){
+     //      ctx.beginPath();
+     //      ctx.moveTo(x, y);
+     //      if (growth > 0) {
+     //          ctx.lineTo(x+width, y-height);
+     //          ctx.lineTo(x+width, y);
+     //          ctx.lineTo(x, y);
+     //      } else {
+     //          ctx.lineTo(x, y-height);
+     //          ctx.lineTo(x+width, y);
+     //          ctx.lineTo(x, y);
+     //      }
+     //      ctx.fillStyle = "#fedfed";
+     //      ctx.fill();
+     //      ctx.closePath();
+     //  }
+
+     // function drawBall(ball) {
+     //      ctx.beginPath();
+     //      ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
+     //      ctx.fillStyle = "#0095DD";
+     //      ctx.fill();
+     //      ctx.closePath();
+     //  }
+ 
+     //  function draw(ball, ad) {
+     //      ctx.clearRect(0, 0, canvas.width, canvas.height);
+     //      drawAdvertising(ad);
+     //      console.log(ball.x, ball.y)
+     //      drawBall(ball);
+     //  }
+
+     //  function frame() {
+     //      navigate(ball, advertising);
+     //      draw(ball, advertising);
+     //  }
       var interval = setInterval(frame, 10);
 
     </script>
